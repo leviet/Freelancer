@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Reset password</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script type="text/javascript">
+        var defaultCSS = document.getElementById('bootstrap-css');
+        function changeCSS(css){
+            if(css) $('head > link').filter(':first').replaceWith('<link rel="stylesheet" href="'+ css +'" type="text/css" />'); 
+            else $('head > link').filter(':first').replaceWith(defaultCSS); 
+        }
+    </script>
+    </head>
+    <body>
+        <h1>Reset password</h1>
+        <div class="row">
+        <form role="form" class="col-md-5">
+        <div class="form-group">
+          <label for="userId">User ID:</label>
+          <input type="text" name="userId" class="form-control" id="userId"/>
+        </div>
+        <div class="form-group">
+          <label for="secAns">Security Answer:</label>
+          <input type="text" class="form-control" name="secAns" id="secAns"/>
+        </div>
+        <button type="button" onclick="resetPassword(); return false;" class="btn btn-default">Submit</button>
+      </form>
+      </div>
+        <script type="text/javascript">
+            function resetPassword(){
+                var userId = $("input[name=userId]").val();
+                var secAns = $("input[name=secAns]").val();
+                $.ajax({
+                    method: "POST",
+                    url: "MyUserServlet?action=resetPassword",
+                    data: { userId: userId, secAns: secAns}
+                }).done(function(data) {
+                    alert(data);
+                });
+            }
+        </script>
+    </body>
+</html>
