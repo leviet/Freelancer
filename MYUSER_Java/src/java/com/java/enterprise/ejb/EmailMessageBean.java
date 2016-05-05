@@ -10,6 +10,7 @@
 //import javax.ejb.ActivationConfigProperty;
 //import javax.ejb.MessageDriven;
 //import javax.ejb.MessageDrivenContext;
+//import javax.jms.JMSDestinationDefinition;
 //import javax.jms.JMSException;
 //import javax.jms.Message;
 //import javax.jms.MessageListener;
@@ -17,20 +18,25 @@
 //
 ///**
 // *
-// * @author vietlv2
+// * @author MyPC
 // */
-//@MessageDriven(mappedName="queue/EmailMessageHandler",activationConfig = {
-//    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")
+//@JMSDestinationDefinition(name = "java:app/EmailMessageBean", interfaceName = "javax.jms.Topic", resourceAdapter = "jmsra", destinationName = "EmailMessageBean")
+//@MessageDriven(activationConfig = {
+//    @ActivationConfigProperty(propertyName = "clientId", propertyValue = "java:app/EmailMessageBean"),
+//    @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "java:app/EmailMessageBean"),
+//    @ActivationConfigProperty(propertyName = "subscriptionDurability", propertyValue = "Durable"),
+//    @ActivationConfigProperty(propertyName = "subscriptionName", propertyValue = "java:app/EmailMessageBean"),
+//    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Topic")
 //})
-//public class EmailServiceBean implements MessageListener {
+//public class EmailMessageBean implements MessageListener {
 //    @Resource
-//    private MessageDrivenContext mdctx;  
-//    public EmailServiceBean() {
+//    private MessageDrivenContext mdctx; 
+//    public EmailMessageBean() {
 //    }
 //    
 //    @Override
 //    public void onMessage(Message message) {
-//      ObjectMessage objectMessage = null;
+//        ObjectMessage objectMessage = null;
 //      try {
 //         objectMessage = (ObjectMessage) message;
 //         MyUser user = (MyUser) objectMessage.getObject();

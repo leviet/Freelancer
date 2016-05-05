@@ -59,7 +59,7 @@ public class MyUserServlet extends HttpServlet {
         String userId = request.getParameter("userId");
         String secAns = request.getParameter("secAns");
         MyUser user = userSession.getUserId(userId, secAns);
-        if(userId.equals(user.getUserId())){
+        if(user!=null && (user.getUserId() != null)){
             try {
                 String newPassword = userSession.genNewPassword();
                 user.setPassword(newPassword);
@@ -123,8 +123,8 @@ public class MyUserServlet extends HttpServlet {
     }// </editor-fold>
 
     private void sendEmailResetPassword(MyUser user) throws NamingException, JMSException{
-        Queue queue = (Queue) ctx.lookup("EmailMessageHandler");
-        QueueConnectionFactory factory = (QueueConnectionFactory) ctx.lookup("ConnectionFactory");
+        Queue queue = (Queue) ctx.lookup("java:app/NewMessageBean");
+        QueueConnectionFactory factory = (QueueConnectionFactory) ctx.lookup("queue/connectionFactory");
         QueueConnection connection =  factory.createQueueConnection();
         QueueSession session = connection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
         QueueSender sender = session.createSender(queue);

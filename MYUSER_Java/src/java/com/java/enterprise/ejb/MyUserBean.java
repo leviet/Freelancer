@@ -36,7 +36,7 @@ public class MyUserBean implements MyUserSession {
     public void updateUser(MyUser user) {
         String statment = "UPDATE MYUSER "
                 + " SET PASSWORD = ? "
-                + " WHERE USERID = ?";
+                + " WHERE USER_ID = ?";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
             con = DriverManager.getConnection(host, uName, uPass);
@@ -60,8 +60,8 @@ public class MyUserBean implements MyUserSession {
     @Override
     public MyUser getUserId(String userId, String secAns) {
         MyUser user = new MyUser();
-        String statment = "SELECT USERID, SECANS, EMAIL FROM MYUSER WHERE "
-                + " USERID = ?"
+        String statment = "SELECT USER_ID, SECANS, EMAIL FROM MYUSER WHERE "
+                + " USER_ID = ?"
                 + " AND SECANS = ?";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
@@ -71,9 +71,9 @@ public class MyUserBean implements MyUserSession {
             stmt.setString(2, secAns);
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
-                user.setUserId(rs.getObject(1).toString());
-                user.setSecAns(rs.getObject(2).toString());
-                user.setEmail(rs.getObject(3).toString());
+                user.setUserId(rs.getObject(1).toString().trim());
+                user.setSecAns(rs.getObject(2).toString().trim());
+                user.setEmail(rs.getObject(3).toString().trim());
             }
         } catch (SQLException ex) {
             Logger.getLogger(MyUserBean.class.getName()).log(Level.SEVERE, null, ex);
