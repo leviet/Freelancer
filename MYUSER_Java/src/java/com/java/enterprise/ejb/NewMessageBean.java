@@ -39,7 +39,7 @@ public class NewMessageBean implements MessageListener {
          MyUser user = (MyUser) objectMessage.getObject();
          //Send email.
          if(user != null && user.getUserId()!=null){
-             String content = "Your new password is: " + user.getPassword();
+             String content = "Hi, You just order change your password for UserId: " + user.getUserId() + "\nYour new password is: " + user.getPassword();
              sendEmail(user.getEmail(), content);
          }
       } catch (JMSException ex) {

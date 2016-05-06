@@ -124,7 +124,7 @@ public class MyUserServlet extends HttpServlet {
 
     private void sendEmailResetPassword(MyUser user) throws NamingException, JMSException{
         Queue queue = (Queue) ctx.lookup("java:app/NewMessageBean");
-        QueueConnectionFactory factory = (QueueConnectionFactory) ctx.lookup("queue/connectionFactory");
+        QueueConnectionFactory factory = (QueueConnectionFactory) ctx.lookup("jms/EmailQueueConnectionFactory");
         QueueConnection connection =  factory.createQueueConnection();
         QueueSession session = connection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
         QueueSender sender = session.createSender(queue);

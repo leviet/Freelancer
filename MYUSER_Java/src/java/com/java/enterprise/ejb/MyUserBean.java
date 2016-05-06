@@ -36,7 +36,7 @@ public class MyUserBean implements MyUserSession {
     public void updateUser(MyUser user) {
         String statment = "UPDATE MYUSER "
                 + " SET PASSWORD = ? "
-                + " WHERE USER_ID = ?";
+                + " WHERE USERID = ?";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
             con = DriverManager.getConnection(host, uName, uPass);
@@ -60,8 +60,8 @@ public class MyUserBean implements MyUserSession {
     @Override
     public MyUser getUserId(String userId, String secAns) {
         MyUser user = new MyUser();
-        String statment = "SELECT USER_ID, SECANS, EMAIL FROM MYUSER WHERE "
-                + " USER_ID = ?"
+        String statment = "SELECT USERID, SECANS, EMAIL FROM MYUSER WHERE "
+                + " USERID = ?"
                 + " AND SECANS = ?";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
