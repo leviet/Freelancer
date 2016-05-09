@@ -1,0 +1,5 @@
+create-jms-resource --restype javax.jms.QueueConnectionFactory
+--description "connection factory for durable subscriptions"
+--property ClientId=MyID jms/EmailQueueConnectionFactory 
+
+create-javamail-resource  --mailhost smtp.gmail.com --mailuser adviet.com --fromaddress adviet.com@gmail.com  --property mail-smtp-auth=true:mail-smtp-ssl-enable=true:mail-smtp-port=465:mail-smtp-password=levanviet  mail/GmailMessageSession
