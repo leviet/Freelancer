@@ -6,6 +6,7 @@
 package com.java.enterprise.ejb;
 
 import java.util.Properties;
+import javax.annotation.Resource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -22,7 +23,8 @@ public class GmailServiceImpl implements EmailService{
     private Properties mailServerProperties;
     private static final String USER_SENDER = "adviet.com@gmail.com";
     private static final String PASSWORD_SENDER = "levanviet";
-    private Session session;
+    @Resource(name = "mail/NewGmailMessageSession")
+    private Session mailSession;
     
     public GmailServiceImpl() {
         mailServerProperties = new Properties();
@@ -31,7 +33,7 @@ public class GmailServiceImpl implements EmailService{
         mailServerProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         mailServerProperties.put("mail.smtp.auth", "true");
         mailServerProperties.put("mail.smtp.port", "465");
-        session = Session.getDefaultInstance(mailServerProperties,
+        mailSession = Session.getDefaultInstance(mailServerProperties,
         new javax.mail.Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                         return new PasswordAuthentication(USER_SENDER,PASSWORD_SENDER);
@@ -42,7 +44,7 @@ public class GmailServiceImpl implements EmailService{
     @Override
     public boolean sendEmail(String reciver, String content, String subject) {
         try {
-            Message message = new MimeMessage(session);
+            Message message = new MimeMessage(mailSession);
             message.setFrom(new InternetAddress(USER_SENDER));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(reciver));
