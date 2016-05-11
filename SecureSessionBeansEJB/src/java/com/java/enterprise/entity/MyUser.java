@@ -6,6 +6,7 @@
 package com.java.enterprise.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,8 @@ public class MyUser implements Serializable {
     private String email;
     private String tel;
     private String address;
+    private String password;
+    private List<Role> roles;
 
     public String getUserId() {
         return userId;
@@ -74,6 +77,22 @@ public class MyUser implements Serializable {
         int hash = 0;
         hash += (userId != null ? userId.hashCode() : 0);
         return hash;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

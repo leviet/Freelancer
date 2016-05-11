@@ -5,10 +5,38 @@
  */
 package com.java.enterprise.ejb;
 
+import com.java.enterprise.entity.MyUser;
+
 /**
  *
  * @author MyPC
  */
 public interface EmployeeSession {
-    
+    /**
+     * Update Myuser.
+     * @param user 
+     */
+    public void updateUser(MyUser user);
+    /**
+     * Get user by userId.
+     * @param userId
+     * @param secAns
+     * @return 
+     */
+    public MyUser getUserId(String userId, String secAns);
+    /**
+     * Gen random password.
+     * @return 
+     */
+    public String genNewPassword();
+    /**
+     * Add employee.
+     * @param user 
+     */
+    public void addMyUser(MyUser user);
+    /**
+     * Remove an employee.
+     * @param user 
+     */
+    public void removeMyUser(MyUser user);
 }
