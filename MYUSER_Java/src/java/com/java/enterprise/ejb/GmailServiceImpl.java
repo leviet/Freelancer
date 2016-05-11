@@ -27,18 +27,6 @@ public class GmailServiceImpl implements EmailService{
     private Session mailSession;
     
     public GmailServiceImpl() {
-        mailServerProperties = new Properties();
-        mailServerProperties.put("mail.smtp.host", "smtp.gmail.com");
-        mailServerProperties.put("mail.smtp.socketFactory.port", "465");
-        mailServerProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        mailServerProperties.put("mail.smtp.auth", "true");
-        mailServerProperties.put("mail.smtp.port", "465");
-        mailSession = Session.getDefaultInstance(mailServerProperties,
-        new javax.mail.Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(USER_SENDER,PASSWORD_SENDER);
-                }
-        });
     }
     
     @Override

@@ -12,13 +12,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.jms.JMSException;
-import javax.jms.ObjectMessage;
-import javax.jms.Queue;
-import javax.jms.QueueConnection;
-import javax.jms.QueueConnectionFactory;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
@@ -33,6 +34,8 @@ import javax.servlet.http.HttpServletResponse;
 public class MyUserServlet extends HttpServlet {
     private static final String USER_SESSION_KEY = "MyUser";
     private InitialContext ctx;
+    @Resource(name = "mail/NewGmailMessageSession")
+    private Session mailSession;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -123,12 +126,16 @@ public class MyUserServlet extends HttpServlet {
     }// </editor-fold>
 
     private void sendEmailResetPassword(MyUser user) throws NamingException, JMSException{
-        Queue queue = (Queue) ctx.lookup("java:app/NewMessageBean");
-        QueueConnectionFactory factory = (QueueConnectionFactory) ctx.lookup("jms/EmailQueueConnectionFactory");
-        QueueConnection connection =  factory.createQueueConnection();
-        QueueSession session = connection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
-        QueueSender sender = session.createSender(queue);
-        ObjectMessage objectMessage = session.createObjectMessage(user);
-        sender.send(objectMessage);
+        try {
+            Message message = new MimeMessage(mailSession);
+            message.setFrom(new InternetAddress("adviet.com@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(user.getEmail()));
+            message.setSubject("Reset password");
+            message.setText("Hi, You just order change your password for UserId: " + user.getUserId() + "\nYour new password is: " + user.getPassword());
+            Transport.send(message);
+        } catch (MessagingException ex) {
+            Logger.getLogger(MyUserServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
