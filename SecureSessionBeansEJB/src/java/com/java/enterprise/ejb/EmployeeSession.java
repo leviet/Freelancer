@@ -6,6 +6,7 @@
 package com.java.enterprise.ejb;
 
 import com.java.enterprise.entity.MyUser;
+import java.util.List;
 
 /**
  *
@@ -23,7 +24,7 @@ public interface EmployeeSession {
      * @param secAns
      * @return 
      */
-    public MyUser getUserId(String userId, String secAns);
+    public MyUser getUserId(String userId);
     /**
      * Gen random password.
      * @return 
@@ -39,4 +40,9 @@ public interface EmployeeSession {
      * @param user 
      */
     public void removeMyUser(MyUser user);
+    /**
+     * List all employee.
+     * @return 
+     */
+    public List<MyUser> getAllUser();
 }

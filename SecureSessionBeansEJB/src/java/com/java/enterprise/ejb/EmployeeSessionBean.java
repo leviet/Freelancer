@@ -12,6 +12,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -60,22 +61,22 @@ String host = "jdbc:derby://localhost:1527/Week1";
     }
 
     @Override
-    public MyUser getUserId(String userId, String secAns) {
+    public MyUser getUserId(String userId) {
         MyUser user = new MyUser();
-        String statment = "SELECT USER_ID, SECANS, EMAIL FROM MYUSER WHERE "
-                + " USER_ID = ?"
-                + " AND SECANS = ?";
+        String statment = "SELECT USER_ID, NAME, EMAIL, ADDRESS, TEL FROM MYUSER WHERE "
+                + " USER_ID = ?";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
             con = DriverManager.getConnection(host, uName, uPass);
             stmt = con.prepareStatement(statment);
             stmt.setString(1, userId);
-            stmt.setString(2, secAns);
             ResultSet rs = stmt.executeQuery();
             if(rs.next()){
                 user.setUserId(rs.getObject(1).toString().trim());
-//                user.setSecAns(rs.getObject(2).toString().trim());
+                user.setName(rs.getObject(2).toString().trim());
                 user.setEmail(rs.getObject(3).toString().trim());
+                user.setAddress(rs.getObject(4).toString().trim());
+                user.setTel(rs.getObject(5).toString().trim());
             }
         } catch (SQLException ex) {
             Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -108,7 +109,34 @@ String host = "jdbc:derby://localhost:1527/Week1";
 
     @Override
     public List<Role> getRoleByUser(String userId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Role> roles = new LinkedList<Role>();
+        String statment = "SELECT ROLE_ID, NAME, CODE FROM ROLE "
+                + " WHERE USER_ID = ?";
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+            con = DriverManager.getConnection(host, uName, uPass);
+            stmt = con.prepareStatement(statment);
+            stmt.setString(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                Role role = new Role();
+                role.setRoleId(rs.getObject(1).toString().trim());
+                role.setName(rs.getObject(2).toString().trim());
+                role.setCode(rs.getObject(3).toString().trim());
+                roles.add(role);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return roles;
     }
 
     @Override
@@ -182,5 +210,37 @@ String host = "jdbc:derby://localhost:1527/Week1";
                 Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    @Override
+    public List<MyUser> getAllUser() {
+        List<MyUser> employees = new LinkedList<MyUser>();
+        String statment = "SELECT USER_ID, NAME, EMAIL, ADDRESS, TEL FROM MYUSER ";
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+            con = DriverManager.getConnection(host, uName, uPass);
+            stmt = con.prepareStatement(statment);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                MyUser user = new MyUser();
+                user.setUserId(rs.getObject(1).toString().trim());
+                user.setName(rs.getObject(2).toString().trim());
+                user.setEmail(rs.getObject(3).toString().trim());
+                user.setAddress(rs.getObject(4).toString().trim());
+                user.setTel(rs.getObject(5).toString().trim());
+                employees.add(user);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return employees;
     }
 }
