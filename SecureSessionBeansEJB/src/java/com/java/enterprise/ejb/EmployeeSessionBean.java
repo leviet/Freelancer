@@ -225,10 +225,14 @@ String host = "jdbc:derby://localhost:1527/Week1";
             while(rs.next()){
                 MyUser user = new MyUser();
                 user.setUserId(rs.getObject(1).toString().trim());
-                user.setName(rs.getObject(2).toString().trim());
-                user.setEmail(rs.getObject(3).toString().trim());
-                user.setAddress(rs.getObject(4).toString().trim());
-                user.setTel(rs.getObject(5).toString().trim());
+                if(rs.getObject(2)!=null)
+                user.setName(rs.getObject(2).toString());
+                if(rs.getObject(3)!=null)
+                user.setEmail(rs.getObject(3).toString());
+                if(rs.getObject(4)!=null)
+                user.setAddress(rs.getObject(4).toString());
+                if(rs.getObject(5)!=null)
+                user.setTel(rs.getObject(5).toString());
                 employees.add(user);
             }
         } catch (SQLException ex) {

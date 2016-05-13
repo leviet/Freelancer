@@ -68,7 +68,7 @@ License: You must have a valid license purchased only from themeforest(the above
 	<div class="page-header-inner container">
 		<!-- BEGIN LOGO -->
 		<div class="page-logo">
-			<a href="index.html">
+			<a href="index.jsp">
 			<img src="assets/admin/layout2/img/logo-default.png" alt="logo" class="logo-default"/>
 			</a>
 			<div class="menu-toggler sidebar-toggler">
@@ -165,7 +165,7 @@ License: You must have a valid license purchased only from themeforest(the above
 						</a>
 						<ul class="dropdown-menu dropdown-menu-default">
 							<li>
-								<a href="extra_profile.html">
+								<a href="myInformation.jsp">
 								<i class="icon-user"></i> My Profile </a>
 							</li>
 							<li>
@@ -202,7 +202,7 @@ License: You must have a valid license purchased only from themeforest(the above
 				<!-- DOC: Set data-auto-speed="200" to adjust the sub menu slide up/down speed -->
 				<ul class="page-sidebar-menu page-sidebar-menu-hover-submenu " data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200">
 					<li class="start ">
-						<a href="index.html">
+						<a href="index.jsp">
 						<i class="icon-home"></i>
 						<span class="title">Dashboard</span>
 						</a>
@@ -292,6 +292,17 @@ function logout(){
         window.location.href = "login.jsp";
     });
 }
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.ajax({
+            method: "POST",
+            url: "LoginServlet?action=list",
+            data: ''
+        }).done(function(data){
+            $(".employee-tbody").html(data);
+        });
+    });
 </script>
 </body>
 <!-- END BODY -->
