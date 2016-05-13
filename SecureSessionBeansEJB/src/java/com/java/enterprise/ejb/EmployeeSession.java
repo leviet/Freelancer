@@ -45,4 +45,11 @@ public interface EmployeeSession {
      * @return 
      */
     public List<MyUser> getAllUser();
+    /**
+     * Check login.
+     * @param userId
+     * @param password
+     * @return 
+     */
+    public boolean checkLogin(String userId, String password);
 }

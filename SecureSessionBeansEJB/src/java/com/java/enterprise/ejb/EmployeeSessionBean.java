@@ -39,7 +39,7 @@ String host = "jdbc:derby://localhost:1527/Week1";
     public void updateUser(MyUser user) {
         String statment = "UPDATE MYUSER "
                 + " SET PASSWORD = ? "
-                + " WHERE USER_ID = ?";
+                + " WHERE USERID = ?";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
             con = DriverManager.getConnection(host, uName, uPass);
@@ -63,8 +63,8 @@ String host = "jdbc:derby://localhost:1527/Week1";
     @Override
     public MyUser getUserId(String userId) {
         MyUser user = new MyUser();
-        String statment = "SELECT USER_ID, NAME, EMAIL, ADDRESS, TEL FROM MYUSER WHERE "
-                + " USER_ID = ?";
+        String statment = "SELECT USERID, NAME, EMAIL, ADDRESS, TEL FROM MYUSER WHERE "
+                + " USERID = ?";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
             con = DriverManager.getConnection(host, uName, uPass);
@@ -110,8 +110,9 @@ String host = "jdbc:derby://localhost:1527/Week1";
     @Override
     public List<Role> getRoleByUser(String userId) {
         List<Role> roles = new LinkedList<Role>();
-        String statment = "SELECT ROLE_ID, NAME, CODE FROM ROLE "
-                + " WHERE USER_ID = ?";
+        String statment = "SELECT r.ROLE_ID, r.NAME, r.CODE FROM USER_ROLE ur"
+                + " JOIN ROLE r ON r.role_id = ur.ROLE_ID "
+                + " WHERE ur.USER_ID = ?";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
             con = DriverManager.getConnection(host, uName, uPass);
@@ -141,7 +142,7 @@ String host = "jdbc:derby://localhost:1527/Week1";
 
     @Override
     public void addMyUser(MyUser user) {
-        String statment = "INSERT INTO MYUSER (USER_ID, NAME, TEL, EMAIL, ADDRESS, PASSWORD)"
+        String statment = "INSERT INTO MYUSER (USERID, NAME, TEL, EMAIL, ADDRESS, PASSWORD)"
                 + " VALUES (?, ?, ?, ?, ?, ?)";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
@@ -170,7 +171,7 @@ String host = "jdbc:derby://localhost:1527/Week1";
 
     @Override
     public void removeMyUser(MyUser user) {
-        String statment = "DELETE FROM MYUSER WHERE USER_ID = ?";
+        String statment = "DELETE FROM MYUSER WHERE USERID = ?";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
             con = DriverManager.getConnection(host, uName, uPass);
@@ -192,7 +193,7 @@ String host = "jdbc:derby://localhost:1527/Week1";
 
     @Override
     public void removeByUser(String userId) {
-        String statment = "DELETE FROM USER_ROLE WHERE USER_ID = ?";
+        String statment = "DELETE FROM USER_ROLE WHERE USERID = ?";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
             con = DriverManager.getConnection(host, uName, uPass);
@@ -215,7 +216,7 @@ String host = "jdbc:derby://localhost:1527/Week1";
     @Override
     public List<MyUser> getAllUser() {
         List<MyUser> employees = new LinkedList<MyUser>();
-        String statment = "SELECT USER_ID, NAME, EMAIL, ADDRESS, TEL FROM MYUSER ";
+        String statment = "SELECT USERID, NAME, EMAIL, ADDRESS, TEL FROM MYUSER ";
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
             con = DriverManager.getConnection(host, uName, uPass);
@@ -242,5 +243,36 @@ String host = "jdbc:derby://localhost:1527/Week1";
             }
         }
         return employees;
+    }
+
+    @Override
+    public boolean checkLogin(String userId, String password) {
+        String statment = "SELECT USERID, NAME, EMAIL, ADDRESS, TEL FROM MYUSER WHERE "
+                + " USERID = ?"
+                + " AND PASSWORD = ?";
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+            con = DriverManager.getConnection(host, uName, uPass);
+            stmt = con.prepareStatement(statment);
+            stmt.setString(1, userId);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }finally{
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeSessionBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return false;
     }
 }
